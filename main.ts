@@ -1,15 +1,4 @@
 function whichmon () {
-    if (area == 0) {
-        currentmon = normalmons._pickRandom()
-    } else if (area == 1) {
-        currentmon = mosscavemons._pickRandom()
-    } else {
-        currentmon = oceanmons._pickRandom()
-    }
-    basic.showString("" + (currentmon))
-    if (dex.indexOf(currentmon) == -1) {
-        dex.push(currentmon)
-    }
     if (dex.length == 9) {
         basic.showLeds(`
             . . # . .
@@ -22,6 +11,18 @@ function whichmon () {
         basic.showString("Rayquaza?")
         basic.showString("Shake to throw a Poke Ball!")
         rayquazaencounter = true
+        return
+    }
+    if (area == 0) {
+        currentmon = normalmons._pickRandom()
+    } else if (area == 1) {
+        currentmon = mosscavemons._pickRandom()
+    } else {
+        currentmon = oceanmons._pickRandom()
+    }
+    basic.showString("" + (currentmon))
+    if (dex.indexOf(currentmon) == -1) {
+        dex.push(currentmon)
     }
 }
 input.onPinPressed(TouchPin.P0, function () {
@@ -60,6 +61,9 @@ function encounterwild () {
     }
     encountermon = randint(1, 3)
     whichmon()
+    if (rayquazaencounter) {
+        return
+    }
     _catch = randint(1, 8)
     if (5 <= _catch) {
         basic.showLeds(`
@@ -251,11 +255,4 @@ for (let index = 0; index < 1; index++) {
 character = game.createSprite(2, 2)
 basic.forever(function () {
     character.ifOnEdgeBounce()
-})
-basic.forever(function () {
-    while (rayquazaencounter) {
-        if (!(character.isDeleted())) {
-            character.delete()
-        }
-    }
 })
